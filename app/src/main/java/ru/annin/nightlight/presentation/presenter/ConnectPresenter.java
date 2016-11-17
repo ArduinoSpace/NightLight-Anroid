@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.github.ivbaranov.rxbluetooth.RxBluetooth;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import ru.annin.nightlight.R;
@@ -27,7 +26,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ConnectPresenter extends BasePresenter<ConnectViewHolder, ConnectView> {
 
-    private static final UUID CONNECT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final int REQUEST_ENABLE_BLE = 23;
 
     // Component's
@@ -77,19 +75,24 @@ public class ConnectPresenter extends BasePresenter<ConnectViewHolder, ConnectVi
 
     private void scanDevices() {
         mViewHolder.clearData();
-        final Subscription subscription = rxBluetooth.observeDevices()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.computation())
-                .timeout(8_000, TimeUnit.MILLISECONDS, Observable.empty(), AndroidSchedulers.mainThread())
-                .subscribe(mViewHolder::addData,
-                        mViewHolder::error,
-                        () -> {
-                            rxBluetooth.cancelDiscovery();
-                            mViewHolder.hideLoading()
-                                    .isEmpty();
-                        });
-        rxSubscription.add(subscription);
-        rxBluetooth.startDiscovery();
+        if (!rxBluetooth.isBluetoothEnabled()) {
+            mViewHolder.hideLoading()
+                    .error(R.string.msg_ble_enable);
+        } else {
+            final Subscription subscription = rxBluetooth.observeDevices()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.computation())
+                    .timeout(8_000, TimeUnit.MILLISECONDS, Observable.empty(), AndroidSchedulers.mainThread())
+                    .subscribe(mViewHolder::addData,
+                            mViewHolder::error,
+                            () -> {
+                                rxBluetooth.cancelDiscovery();
+                                mViewHolder.hideLoading()
+                                        .isEmpty();
+                            });
+            rxSubscription.add(subscription);
+            rxBluetooth.startDiscovery();
+        }
     }
 
     private final ConnectViewHolder.OnInteractionListener onViewHolderListener = new ConnectViewHolder.OnInteractionListener() {
@@ -100,7 +103,7 @@ public class ConnectPresenter extends BasePresenter<ConnectViewHolder, ConnectVi
 
         @Override
         public void onDeviceClick(@NonNull BluetoothDevice device) {
-
+            mView.navigateLed(device);
         }
     };
 }

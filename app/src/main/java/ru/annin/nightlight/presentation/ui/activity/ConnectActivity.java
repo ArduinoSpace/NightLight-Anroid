@@ -1,6 +1,8 @@
 package ru.annin.nightlight.presentation.ui.activity;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
@@ -29,5 +31,11 @@ public class ConnectActivity extends BaseActivity<ConnectPresenter> implements C
         mPresenter.setViewHolder(viewHolder);
         mPresenter.setView(this);
         mPresenter.onInitialization(this);
+    }
+
+    @Override
+    public void navigateLed(@NonNull BluetoothDevice device) {
+        mNavigator.navigate2Led(this, device);
+        finish();
     }
 }

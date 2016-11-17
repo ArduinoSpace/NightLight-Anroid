@@ -7,8 +7,13 @@
 
     <!-- Activities -->
     <string name="activity_title_connect">Подключение к устройству</string>
+    <string name="activity_title_led">Настройка светильника</string>
 
     <!-- Connect -->
     <string name="msg_ble_enable">Включите Bluetooth, для поиска устройств</string>
+
+    <!-- Led -->
+    <string name="action_enable_effect_rainbow">Эффект радуга</string>
+    <string name="action_static_color">Изменить цвет</string>
 
 </resources>
