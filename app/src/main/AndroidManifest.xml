@@ -23,7 +23,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.ui.activity.ConnectActivity"/>
+        <activity
+                android:name=".presentation.ui.activity.ConnectActivity"
+                android:label="@string/activity_title_connect"/>
 
     </application>
 

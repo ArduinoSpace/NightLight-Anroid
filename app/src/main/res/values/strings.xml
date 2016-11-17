@@ -1,3 +1,9 @@
 <resources>
+
+    <!-- Global -->
     <string name="app_name">NightLight</string>
+
+    <!-- Activities -->
+    <string name="activity_title_connect">Подключение к устройству</string>
+
 </resources>
