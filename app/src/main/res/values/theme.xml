@@ -12,4 +12,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="NightLightTheme.Splash" parent="NightLightTheme.NoActionBar">
+        <item name="android:background">@drawable/layer_splash</item>
+    </style>
 </resources>
