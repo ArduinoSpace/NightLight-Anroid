@@ -2,8 +2,13 @@
 
     <!-- Global -->
     <string name="app_name">NightLight</string>
+    <string name="msg_empty">Пусто</string>
+
 
     <!-- Activities -->
     <string name="activity_title_connect">Подключение к устройству</string>
+
+    <!-- Connect -->
+    <string name="msg_ble_enable">Включите Bluetooth, для поиска устройств</string>
 
 </resources>

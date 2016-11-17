@@ -3,6 +3,11 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="ru.annin.nightlight">
 
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-feature android:name="android.hardware.bluetooth" />
+
     <application
             android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
