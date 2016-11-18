@@ -3,6 +3,7 @@ package ru.annin.nightlight.presentation.presenter;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.github.ivbaranov.rxbluetooth.RxBluetooth;
@@ -49,13 +50,18 @@ public class ConnectPresenter extends BasePresenter<ConnectViewHolder, ConnectVi
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!rxBluetooth.isBluetoothEnabled()) {
-            mViewHolder.hideLoading()
-                    .error(R.string.msg_ble_enable);
+    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BLE) {
+            if (resultCode == Activity.RESULT_OK) {
+                mViewHolder.showLoading();
+                scanDevices();
+            } else {
+                mViewHolder.hideLoading()
+                        .error(R.string.msg_ble_enable);
+            }
+            return true;
         }
+        return false;
     }
 
     @Override

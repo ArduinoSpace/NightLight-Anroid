@@ -51,17 +51,20 @@ public class LedPresenter extends BasePresenter<LedViewHolder, LedView> {
         if (bluetoothConnection != null) {
             bluetoothConnection.closeConnection();
         }
-        mViewHolder.setEffectRainbow(enableEffectRainbow);
+        mViewHolder.setEffectRainbow(enableEffectRainbow)
+                .toggleLoading(true);
         rxBluetooth.observeConnectDevice(device, CONNECT_UUID)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(socket -> {
+                    mViewHolder.toggleLoading(false);
                     try {
                         bluetoothConnection = new BluetoothConnection(socket);
                     } catch (Exception e) {
+                        mViewHolder.error(e);
                         e.printStackTrace();
                     }
-                });
+                }, mViewHolder::error);
     }
 
     @Override
@@ -82,21 +85,23 @@ public class LedPresenter extends BasePresenter<LedViewHolder, LedView> {
         return this;
     }
 
+    private void sendData(byte... data) {
+        if (bluetoothConnection != null) {
+            bluetoothConnection.send(data);
+        }
+    }
+
     private final LedViewHolder.OnInteractionListener onViewHolderListener = new LedViewHolder.OnInteractionListener() {
         @Override
         public void onChangeEffectRainbow(boolean flag) {
             enableEffectRainbow = flag;
-            if (bluetoothConnection != null) {
-                if (enableEffectRainbow) {
-                    byte[] packet = {(byte) 0xBB, (byte) 0x00, (byte) 0x00, (byte) 0x00};
-                    bluetoothConnection.send(packet);
-                } else {
-                    int red = Color.red(selectColor);
-                    int green = Color.green(selectColor);
-                    int blue = Color.blue(selectColor);
-                    byte[] packet = {(byte) 0xAA, (byte) red, (byte) green, (byte) blue};
-                    bluetoothConnection.send(packet);
-                }
+            if (enableEffectRainbow) {
+                byte[] packet = {(byte) 0xBB, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+                sendData(packet);
+            } else {
+                byte[] packet = {(byte) 0xAA, (byte) Color.red(selectColor),
+                        (byte) Color.green(selectColor), (byte) Color.blue(selectColor)};
+                sendData(packet);
             }
         }
 
@@ -106,11 +111,9 @@ public class LedPresenter extends BasePresenter<LedViewHolder, LedView> {
                 selectColor = color;
                 enableEffectRainbow = false;
                 mViewHolder.setEffectRainbow(false);
-                int red = Color.red(selectColor);
-                int green = Color.green(selectColor);
-                int blue = Color.blue(selectColor);
-                byte[] packet = {(byte) 0xAA, (byte) red, (byte) green, (byte) blue};
-                bluetoothConnection.send(packet);
+                byte[] packet = {(byte) 0xAA, (byte) Color.red(selectColor),
+                        (byte) Color.green(selectColor), (byte) Color.blue(selectColor)};
+                sendData(packet);
             });
         }
     };

@@ -1,6 +1,7 @@
 package ru.annin.nightlight.presentation.ui.activity;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,13 @@ public class ConnectActivity extends BaseActivity<ConnectPresenter> implements C
         mPresenter.setViewHolder(viewHolder);
         mPresenter.setView(this);
         mPresenter.onInitialization(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mPresenter == null || !mPresenter.onActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

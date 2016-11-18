@@ -1,10 +1,12 @@
 package ru.annin.nightlight.presentation.ui.viewholder;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import ru.annin.nightlight.R;
 import ru.annin.nightlight.presentation.common.BaseViewHolder;
@@ -25,6 +27,7 @@ public class LedViewHolder extends BaseViewHolder {
     private final Toolbar vToolbar;
     private final AppCompatCheckBox cbEffectRainbow;
     private final Button btnChangeColor;
+    private final ProgressBar pbLoading;
 
     // Listener's
     private OnInteractionListener listener;
@@ -34,6 +37,7 @@ public class LedViewHolder extends BaseViewHolder {
         vToolbar = (Toolbar) vRoot.findViewById(R.id.toolbar);
         cbEffectRainbow = (AppCompatCheckBox) vRoot.findViewById(R.id.cb_effect_rainbow);
         btnChangeColor = (Button) vRoot.findViewById(R.id.btn_change_color);
+        pbLoading = (ProgressBar) vRoot.findViewById(R.id.pb_loading);
 
         // Setup View's
         cbEffectRainbow.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -48,8 +52,21 @@ public class LedViewHolder extends BaseViewHolder {
         });
     }
 
-    public void setEffectRainbow(boolean effectRainbow) {
+    public LedViewHolder toggleLoading(boolean flag) {
+        pbLoading.setVisibility(flag ? View.VISIBLE : View.GONE);
+        cbEffectRainbow.setEnabled(!flag);
+        btnChangeColor.setEnabled(!flag);
+        return this;
+    }
+
+    public LedViewHolder setEffectRainbow(boolean effectRainbow) {
         cbEffectRainbow.setChecked(effectRainbow);
+        return this;
+    }
+
+    public LedViewHolder error(@NonNull Throwable t) {
+        Snackbar.make(vRoot, t.getMessage(), Snackbar.LENGTH_LONG).show();
+        return this;
     }
 
     public void setOnInteractionListener(OnInteractionListener listener) {

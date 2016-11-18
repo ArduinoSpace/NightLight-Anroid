@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import ru.annin.nightlight.R;
@@ -31,7 +31,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<ItemDeviceConnectViewHol
     private OnClickListener listener;
 
     public DeviceAdapter() {
-        data = new ArrayList<>();
+        data = new LinkedList<>();
     }
 
     @Override
